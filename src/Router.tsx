@@ -5,7 +5,7 @@ import Auth from "./routes/Auth";
 import Home from "./routes/Home";
 
 interface AppRouterProps {
-  isLoggedIn: User | null;
+  isLoggedIn: boolean;
 }
 const AppRouter: React.FC<AppRouterProps> = ({ isLoggedIn }) => {
   return (
