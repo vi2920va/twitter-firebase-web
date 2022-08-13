@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { authService } from "../firebase";
+import { authService, firebaseInstance } from "../firebase";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -36,7 +36,22 @@ const Auth = () => {
       setError(error.message);
     }
   };
+
   const toggleAccount = () => setNewAccount((prev) => !prev);
+  const handleSocialClick = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const { name } = event.currentTarget;
+    let provider: any;
+
+    if (name === "google") {
+      provider = new firebaseInstance.auth.GoogleAuthProvider();
+    } else if (name === "github") {
+      provider = new firebaseInstance.auth.GithubAuthProvider();
+    }
+
+    const data = await authService.signInWithPopup(provider);
+  };
 
   return (
     <div>
@@ -66,8 +81,12 @@ const Auth = () => {
         {newAccount ? "Sign In" : "Create Account"}
       </span>
       <div>
-        <button>Continue with Google</button>
-        <button>Continue with Github</button>
+        <button name="google" onClick={handleSocialClick}>
+          Continue with Google
+        </button>
+        <button name="github" onClick={handleSocialClick}>
+          Continue with Github
+        </button>
       </div>
     </div>
   );
