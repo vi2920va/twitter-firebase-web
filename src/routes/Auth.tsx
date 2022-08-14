@@ -37,7 +37,6 @@ const Auth = () => {
     }
   };
 
-  const toggleAccount = () => setNewAccount((prev) => !prev);
   const handleSocialClick = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -52,6 +51,8 @@ const Auth = () => {
 
     const data = await authService.signInWithPopup(provider);
   };
+
+  const toggleAccount = () => setNewAccount((prev) => !prev);
 
   return (
     <div>

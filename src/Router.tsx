@@ -1,8 +1,9 @@
 import React from "react";
-import { User } from "firebase";
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import Navigation from "./components/Navigation";
 import Auth from "./routes/Auth";
 import Home from "./routes/Home";
+import Profile from "./routes/Profile";
 
 interface AppRouterProps {
   isLoggedIn: boolean;
@@ -10,11 +11,15 @@ interface AppRouterProps {
 const AppRouter: React.FC<AppRouterProps> = ({ isLoggedIn }) => {
   return (
     <Router>
+      {isLoggedIn && <Navigation />}
       <Switch>
         {isLoggedIn ? (
           <>
             <Route exact path="/">
               <Home />
+            </Route>
+            <Route exact path="/profile">
+              <Profile />
             </Route>
           </>
         ) : (
