@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { dbService } from "../firebase";
 
 const Home = () => {
   const [twitter, setTwitter] = useState("");
@@ -6,8 +7,13 @@ const Home = () => {
     const { value } = event.currentTarget;
     setTwitter(value);
   };
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    await dbService.collection("twitter").add({
+      twitter,
+      createAt: Date.now(),
+    });
+    setTwitter("");
   };
   return (
     <form onSubmit={onSubmit}>
@@ -18,7 +24,7 @@ const Home = () => {
         placeholder="What's on your mind"
         maxLength={120}
       />
-      <button>Twitter</button>
+      <button type="submit">Twitter</button>
     </form>
   );
 };
