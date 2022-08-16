@@ -7,8 +7,11 @@ import Profile from "./routes/Profile";
 
 interface AppRouterProps {
   isLoggedIn: boolean;
+  userInfo: {
+    uid: string;
+  };
 }
-const AppRouter: React.FC<AppRouterProps> = ({ isLoggedIn }) => {
+const AppRouter: React.FC<AppRouterProps> = ({ isLoggedIn, userInfo }) => {
   return (
     <Router>
       {isLoggedIn && <Navigation />}
@@ -16,7 +19,7 @@ const AppRouter: React.FC<AppRouterProps> = ({ isLoggedIn }) => {
         {isLoggedIn ? (
           <>
             <Route exact path="/">
-              <Home />
+              <Home userInfo={userInfo} />
             </Route>
             <Route exact path="/profile">
               <Profile />
