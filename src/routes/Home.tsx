@@ -4,25 +4,25 @@ import { dbService } from "../firebase";
 interface TwittersProps {
   id: string;
   createAt?: string;
-  twitter?: string;
+  text?: string;
 }
-
-const Home = () => {
+interface HomeProps {
+  userInfo: {
+    uid: string;
+  };
+}
+const Home: React.FC<HomeProps> = ({ userInfo }) => {
   const [twitter, setTwitter] = useState("");
   const [twitters, setTwitters] = useState<TwittersProps[]>([]);
 
-  const fetchTiwtters = async () => {
-    const dbtwitters = await dbService.collection("twitter").get();
-    dbtwitters.forEach((document) => {
-      const nweetObject = {
-        ...document.data(),
-        id: document.id,
-      };
-      setTwitters((prev) => [nweetObject, ...prev]);
-    });
-  };
   useEffect(() => {
-    fetchTiwtters();
+    dbService.collection("twitter").onSnapshot((snapshot) => {
+      const nweetArray = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTwitters(nweetArray);
+    });
   }, []);
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
@@ -31,8 +31,9 @@ const Home = () => {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await dbService.collection("twitter").add({
-      twitter,
+      text: twitter,
       createAt: Date.now(),
+      creatorId: userInfo.uid,
     });
     setTwitter("");
   };
@@ -50,7 +51,7 @@ const Home = () => {
       </form>
       <ul>
         {twitters.map((twitter) => (
-          <li key={twitter.id}>{twitter.twitter}</li>
+          <li key={twitter.id}>{twitter.text}</li>
         ))}
       </ul>
     </div>
